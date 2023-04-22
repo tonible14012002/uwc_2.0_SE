@@ -1,4 +1,4 @@
-import EButton from "../../../../../../components/Button";
+import EButton from "../../../../../../components/EButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";

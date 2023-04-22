@@ -35,6 +35,7 @@ const EButton = ({
 
     return (
         <Com
+            type="button"
             {...props}
         >
         {children}

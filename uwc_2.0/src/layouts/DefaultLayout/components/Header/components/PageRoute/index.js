@@ -1,4 +1,4 @@
-import EButton from "../../../../../../components/Button";
+import EButton from "../../../../../../components/EButton";
 import usePageName from "../../../../../../hooks/usePageName";
 
 const PageRoute = () => {
@@ -6,7 +6,7 @@ const PageRoute = () => {
     const { pageName, pages } = usePageName();
 
     return (
-        <div className="hidden desktop:flex">
+        <div className="hidden desktop:flex font-medium">
             <EButton
                 to={'/'}
             >

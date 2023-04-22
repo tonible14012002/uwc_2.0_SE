@@ -2,6 +2,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import DefaultLayout from "./layouts/DefaultLayout";
 import NoHeaderLayout from "./layouts/NoHeaderLayout/index.js";
 import { privateRoutes } from "./routes";
+import { EmployeeProvider } from "./context/EmployeeContext";
+import ScrollToTop from "./components/ScrollToTop";
+import { VehicleProvider } from "./context/VehicleContext";
 
 function App() {
   
@@ -17,7 +20,13 @@ function App() {
               path={route.path}
               element={
                 <Layout>
-                  <Page/>
+                  <VehicleProvider>
+                    <EmployeeProvider>
+                      <ScrollToTop>
+                        <Page/>
+                      </ScrollToTop>
+                    </EmployeeProvider>
+                  </VehicleProvider>
                 </Layout>
               }
             />

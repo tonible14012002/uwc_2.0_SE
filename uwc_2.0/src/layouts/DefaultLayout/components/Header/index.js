@@ -2,8 +2,9 @@ import DropDown from "./components/DropDown";
 import PageRoute from "./components/PageRoute";
 
 const Header = () => {
+
     return (
-        <header className="w-full fixed h-[5rem] desktop:h-[5rem] bg-white px-4 shadow-sm">
+        <header className="w-full fixed h-[5rem] desktop:h-[5rem] bg-white px-4 shadow-sm top-0 z-20">
             <div className="max-w-[86rem] m-auto h-full">
                 <div className="h-full max-w-[86rem] mx-auto flex items-center justify-between">
                     <div className="flex items-center">

@@ -1,9 +1,9 @@
 import NoHeaderLayout from "./layouts/NoHeaderLayout/index.js";
 import Dashboard from "./views/Dashboard";
 import Login from "./views/Login";
-import Employee from "./views/Employee"
 import RouteMap from "./views/RouteMap";
-import Vehicle from "./views/Vehicle"
+import Employee from "./views/Management/Employee";
+import Vehicle from "./views/Management/Vehicle";
 
 const privateRoutes = [
     {
