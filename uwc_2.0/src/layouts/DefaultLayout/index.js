@@ -1,11 +1,20 @@
+import { createContext, useContext, useState } from "react";
 import Header from "./components/Header";
 
+const HeaderContext = createContext()
+const useHeaderBound = () => useContext(HeaderContext)
+
 const DefaultLayout = ({children}) => {
+
+    const [ headerBound, setHeaderBound ] = useState(0)
+
     return (
         <div className="h-[100vh] w-full">
-            <Header/>
-            <div className="max-w-[86rem] mx-auto w-full pt-[5rem] desktop:pt-[5rem] min-h-[calc(100vh-200px)]">
-                {children}
+            <Header onHeaderLoad={setHeaderBound} />
+            <div className="max-w-[100rem] mx-auto w-full pt-[5rem] desktop:pt-[5rem] min-h-[calc(100vh-200px)]">
+                <HeaderContext.Provider value={{headerBound}}>
+                    {children}
+                </HeaderContext.Provider>
             </div>
             <Footer/>
         </div>
@@ -24,4 +33,5 @@ const Footer = () =>{
     )
 }
 
+export { useHeaderBound };
 export default DefaultLayout;

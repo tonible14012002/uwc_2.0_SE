@@ -37,11 +37,11 @@ const Vehicle = () => {
 
     return (
         <>
-        <div>
-            <header className="mt-16 mb-8">
-                    <span className="block w-fit text-4xl font-semibold ">
-                        Vehicle Management
-                </span>
+            <div>
+                <header className="mt-16 mb-8">
+                        <span className="block w-fit text-4xl font-semibold ">
+                            Vehicle Management
+                    </span>
                 </header>
 
                 <ul className="h-10 flex mb-8">

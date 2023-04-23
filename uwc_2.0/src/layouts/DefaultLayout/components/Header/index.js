@@ -1,12 +1,23 @@
+import { useEffect, useRef } from "react";
 import DropDown from "./components/DropDown";
 import PageRoute from "./components/PageRoute";
 
-const Header = () => {
+const Header = ({onHeaderLoad}) => {
+
+    const headerRef = useRef()
+
+    useEffect(() => {
+        if (headerRef.current) {
+            onHeaderLoad(headerRef.current.getBoundingClientRect())
+        }
+    }, [onHeaderLoad])
 
     return (
-        <header className="w-full fixed h-[5rem] desktop:h-[5rem] bg-white px-4 shadow-sm top-0 z-20">
-            <div className="max-w-[86rem] m-auto h-full">
-                <div className="h-full max-w-[86rem] mx-auto flex items-center justify-between">
+        <header className="w-full fixed h-[5rem] desktop:h-[5rem] bg-white px-4 shadow-sm top-0 z-40" 
+            ref={headerRef}
+        >
+            <div className="max-w-[100rem] m-auto h-full">
+                <div className="h-full max-w-[100rem] mx-auto flex items-center justify-between">
                     <div className="flex items-center">
                         <div className="rounded-lg w-14 h-14 bg-gradient-to-r from-blue-400 to-cyan-400 flex items-center justify-center mr-4">
                             <h1 className="text-4xl text-white font-semibold">U</h1>
