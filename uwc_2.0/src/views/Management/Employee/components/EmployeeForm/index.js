@@ -37,7 +37,7 @@ const EmployeeForm = ({
                 setLoading(true)
                 const result = await updateMyEmployee(employeeId, data)
                 console.log('restult upadate" ', result)
-                dispatcher({type: "update", data: { id:employeeId, data: result.data}})
+                dispatcher({type: "patch", data: { id:employeeId, data: result.data}})
             }
             catch (e) {
                 console.log(e)
@@ -121,8 +121,8 @@ const EmployeeForm = ({
                                     className="outline-none p-2 bg-slate-50"
                                     {...register('role', {required: true})}
                                 >
-                                    <option value="janitor">Janitor</option>
-                                    <option value="collector">Collector</option>
+                                    <option value="Janitor">Janitor</option>
+                                    <option value="Collector">Collector</option>
                                 </select>
                         </div>
                         <EButton className="bg-blue-400 hover:bg-blue-500 transition-colors text-white shadow-md w-full p-3 font-medium "

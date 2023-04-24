@@ -2,9 +2,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import EButton from "../../../../../components/EButton"
 import { faClose, faPenToSquare } from "@fortawesome/free-solid-svg-icons"
 import { useVehicleContext } from "../../../../../context/VehicleContext"
-import { useCallback, useState } from "react"
-import EmployeeSearchTab from "../EmployeeSearchTab"
+import { useCallback, useState, useMemo } from "react"
 import { useEmployeeContext } from "../../../../../context/EmployeeContext"
+import EmployeeSearchTab from "../../../../../components/EmployeeSearchTab"
 
 
 const VehicleDriver = ({ value, data}) => {
@@ -13,6 +13,8 @@ const VehicleDriver = ({ value, data}) => {
     const { dispatcher: employeeDispatcher } = useEmployeeContext()
     const [ showEmployeeSelector, setShowEmployeeSelector ] = useState()
     const [ clickedPosition, setClickedPosition ] = useState({x: 0, y:0})
+
+    const possibleDriver = useMemo(() => data.type === "Troller" ? "Janitor" : "Collector", [data])
 
     const handleUnAssignDriver = () => {
         try {
@@ -31,6 +33,12 @@ const VehicleDriver = ({ value, data}) => {
         }
         // Unassign driver
     }
+
+
+    const handleFilterEmployeeSearch = useCallback((employee) => (
+        employee.vehicle === null && employee.role === possibleDriver
+    )
+    , [possibleDriver])
 
     const handleAssignEmployeePress = (e) => {
         const mousePosition = {
@@ -59,10 +67,10 @@ const VehicleDriver = ({ value, data}) => {
         <>
             {showEmployeeSelector && 
             <EmployeeSearchTab
-                role={data.type === "Troller" ? "Janitor" : "Collector"}
                 onClose={handleCloseEmployeeSelector}
                 clickPosition={clickedPosition}
                 onSelect={handleAssignEmployee}
+                filter={handleFilterEmployeeSearch}
             />}
 
             <div className="w-full h-full relative flex items-center">
@@ -79,6 +87,7 @@ const VehicleDriver = ({ value, data}) => {
                 </div>:
                 // !value
                 <div className="flex gap-3 px-4 items-baseline justify-between w-full">
+                    
                     <span className="text-slate-300">_____________</span>
                     <EButton className="" 
                         onClick={handleAssignEmployeePress}

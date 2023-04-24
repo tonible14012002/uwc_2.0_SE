@@ -1,18 +1,19 @@
 import ReactDOM from "react-dom"
-import useOnClickedOutSide from "../../../../../hooks/useOnClickOutside"
 import { useRef } from "react"
-import { useEmployeeContext } from "../../../../../context/EmployeeContext"
-import EButton from "../../../../../components/EButton"
+import EButton from "../EButton"
+import useOnClickedOutSide from "../../hooks/useOnClickOutside"
+import { useEmployeeContext } from "../../context/EmployeeContext"
 
 const EmployeeSearchTab = ({
     clickPosition,
     onClose,
-    role,
+    filter,
     onSelect = () => {}
 }) => {
 
     const { employees } = useEmployeeContext()
-    const isEnoughBottomSpace = clickPosition.y > (window.innerHeight - 500)
+    const isEnoughBottomSpace = clickPosition.y < (window.innerHeight - 400)
+    console.log('enough ? __-',isEnoughBottomSpace)
     const wrapperRef = useRef()
 
     const handleEmployeeSelect = (id, fullname) => {
@@ -25,7 +26,7 @@ const EmployeeSearchTab = ({
     return (
         ReactDOM.createPortal(
             <div className={`fixed z-50 bg-white shadow-md w-[340px] min-h-[300px] max-h-[500px]
-                ${isEnoughBottomSpace ? "-translate-y-1/3" : ""}
+                ${isEnoughBottomSpace ? "-translate-y-1/3" : "-translate-y-full"}
             `}
                 style={{left: clickPosition.x, top: clickPosition.y}}
                 ref={wrapperRef}
@@ -35,7 +36,7 @@ const EmployeeSearchTab = ({
                     placeholder="Search Employee ..."
                 />
                 <ul className="flex flex-col text-slate-600">
-                    {employees.filter(em => em.vehicle === null && em.role === role)
+                    {employees.filter(filter)
                     .map(em => (
                         <EmployeeSearchTabItem
                             key={em.id}

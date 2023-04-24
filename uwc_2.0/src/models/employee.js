@@ -1,24 +1,16 @@
-
 const EmployeeModel = () => {
-
     let autoId = 0
-    const create = ({
-        fullname, 
-        role, 
-        phone, 
-        email, 
-        vehicle=null, 
-        route=null
-    }) => {
+    const create = (data) => {
         return {
-            id: autoId++, 
+            id: autoId++,
             hired_date: new Date().toLocaleDateString(),
-            fullname,
-            role,
-            phone,
-            email,
-            vehicle,
-            route,
+            fullname: data.fullname,
+            role: data.role,
+            phone: data.phone,
+            email: data.email,
+            vehicle: data.vehicle || null,
+            route: data.route || null,
+            mcp: data.mcp || null,
         }
     }
 

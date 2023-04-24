@@ -3,8 +3,11 @@ import DefaultLayout from "./layouts/DefaultLayout";
 import NoHeaderLayout from "./layouts/NoHeaderLayout/index.js";
 import { privateRoutes } from "./routes";
 import { EmployeeProvider } from "./context/EmployeeContext";
+import { RouteProvider } from "./context/RouteContext";
+import { ContainProvider } from "./context/ContainContext";
 import ScrollToTop from "./components/ScrollToTop";
 import { VehicleProvider } from "./context/VehicleContext";
+import McpProvider from "./context/McpContext/McpProvider";
 
 function App() {
   
@@ -20,13 +23,19 @@ function App() {
               path={route.path}
               element={
                 <Layout>
-                  <VehicleProvider>
-                    <EmployeeProvider>
-                      <ScrollToTop>
-                        <Page/>
-                      </ScrollToTop>
-                    </EmployeeProvider>
-                  </VehicleProvider>
+                  <RouteProvider>
+                    <ContainProvider>
+                      <McpProvider>
+                        <VehicleProvider>
+                          <EmployeeProvider>
+                            <ScrollToTop>
+                              <Page/>
+                            </ScrollToTop>
+                          </EmployeeProvider>
+                        </VehicleProvider>
+                      </McpProvider>
+                    </ContainProvider>
+                  </RouteProvider>
                 </Layout>
               }
             />

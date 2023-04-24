@@ -1,7 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import EButton from "../../../components/EButton";
 import { useEmployeeContext } from "../../../context/EmployeeContext";
-import { getMyEmployee } from "../../../services/emlpoyeServices";
 import AssetFilter from "../components/AssetFilter";
 import AssetSearch from "../components/AssetSearch";
 import AssetTable from "../components/AssetTable";
@@ -10,7 +9,7 @@ import EmployeeForm from "./components/EmployeeForm";
 
 const Employee = () => {
 
-    const { employees, dispatcher } = useEmployeeContext()
+    const { employees } = useEmployeeContext()
     const [ showDeleteModal, setShowDeleteModal ] = useState({show: false, id: null})
     const [ showFormModal, setShowFormModal ] = useState({show: false, id: null})
 
