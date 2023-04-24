@@ -18,7 +18,14 @@ const PageRoute = () => {
                 to={'/employee'}
             >
                 <div className={`px-8 py-3 ${pageName === pages.Employee ? "hover:bg-blue-500 text-white bg-blue-400": "hover:text-blue-500"} transition-all `}>
-                    Employee 
+                    Employee
+                </div>
+            </EButton>
+            <EButton
+                to={'/message'}
+            >
+                <div className={`px-8 py-3 ${pageName === pages.Message ? "hover:bg-blue-500 text-white bg-blue-400": "hover:text-blue-500"} transition-all `}>
+                    Message
                 </div>
             </EButton>
             <EButton
@@ -32,7 +39,7 @@ const PageRoute = () => {
                 to={'/route-map'}
             >
                 <div className={`px-8 py-3 ${pageName === pages.RouteMap ? "text-white bg-blue-400": "hover:text-blue-500"} transition-all `}>
-                    Route Map 
+                    Route Map
                 </div>
             </EButton>
         </div>

@@ -4,6 +4,8 @@ import Login from "./views/Login";
 import RouteMap from "./views/RouteMap";
 import Employee from "./views/Management/Employee";
 import Vehicle from "./views/Management/Vehicle";
+import Message from "./views/Message";
+import Schedule from "./views/Schedule";
 
 const privateRoutes = [
     {
@@ -17,7 +19,11 @@ const privateRoutes = [
     },
     {
         path: 'employee',
-        component: Employee 
+        component: Employee
+    },
+    {
+        path: 'message',
+        component: Message
     },
     {
         path: 'vehicle',
@@ -26,8 +32,11 @@ const privateRoutes = [
     {
         path: 'route-map',
         component: RouteMap
+    },
+    {
+        path: 'schedule',
+        component: Schedule
     }
-    
 ];
 
 export { privateRoutes };

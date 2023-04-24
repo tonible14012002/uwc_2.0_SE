@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import EButton from "../../../components/EButton";
 import { useEmployeeContext } from "../../../context/EmployeeContext";
 import { getMyEmployee } from "../../../services/emlpoyeServices";
@@ -13,8 +14,8 @@ const Employee = () => {
     const { employees, dispatcher } = useEmployeeContext()
     const [ showDeleteModal, setShowDeleteModal ] = useState({show: false, id: null})
     const [ showFormModal, setShowFormModal ] = useState({show: false, id: null})
+    const navigate = useNavigate();
 
-    
 
     const handleAddEmployeePress = () => {
         setShowFormModal({show: true, id: null})
@@ -35,6 +36,10 @@ const Employee = () => {
     const handleCloseDeleteModal = useCallback(() => {
         setShowDeleteModal({show: false, id: null})
     }, [setShowDeleteModal])
+
+    const handleSchedulePress = useCallback(() => {
+        navigate('/schedule');
+    },[])
 
     return (
         <>
@@ -69,6 +74,7 @@ const Employee = () => {
                     gridClassName="grid-cols-[100px_300px_2fr_2fr_3fr_2fr_1fr]"
                     onDeleteAsset={handleDeleteEmployeePress}
                     onUpdateAsset={handleUpdateEmployeePress}
+                    onCalendarAsset={handleSchedulePress}
                     assets={employees || []}
                 />
             </div>

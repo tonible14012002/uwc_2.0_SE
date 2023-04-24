@@ -7,7 +7,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import { VehicleProvider } from "./context/VehicleContext";
 
 function App() {
-  
+
   return (
     <BrowserRouter>
       <Routes>
@@ -15,7 +15,7 @@ function App() {
           const Page = route.component;
           const Layout = route.layout || DefaultLayout;
           return (
-            <Route 
+            <Route
               key={index}
               path={route.path}
               element={
