@@ -29,8 +29,8 @@ const RouteList = () => {
                     routes?.map((route => (
                         <RouteItem
                             key={route.id}
-                            id={route.id}
                             onSelect={handleRoutePress}
+                            data={route}
                         />
                     )))}
                 </section>
@@ -49,10 +49,11 @@ export default RouteList
 
 
 const RouteItem = ({
-    id,
-    onSelect
+    onSelect,
+    data
 }) => {
 
+    const { id } = data
     const handleButtonPress = () => {
         onSelect(id)
     }
@@ -62,7 +63,7 @@ const RouteItem = ({
             <EButton className="w-full flex items-center justify-between p-4"
                 onClick={handleButtonPress}
             >
-                <h3 className="font-medium">Route {id}</h3>
+                <h3 className="font-medium">{id} - {data.name}</h3>
                 <FontAwesomeIcon className="text-sm text-slate-400" icon={faChevronRight} />
             </EButton>
         </div>

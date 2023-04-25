@@ -8,7 +8,8 @@ const RouteModel = () => {
         contains: data.contains || [],
         employee: data.employee || null // only collector
     })
-    return {create}
+    const getNextId = () => autoIncreaseId
+    return {create, getNextId}
 }
 
 export default RouteModel()

@@ -7,12 +7,27 @@ import { useMapContext } from "../../../../context/MapContext"
 import { useCallback, useEffect, useState } from "react"
 import { useMcpContext } from "../../../../../../context/McpContext/McpProvider"
 import Marker from "../../../../mapAssets/Marker"
-import L, { marker } from "leaflet"
-import icon from 'leaflet/dist/images/marker-icon.png'
+import L from "leaflet"
 import iconShadow from 'leaflet/dist/images/marker-shadow.png'
-import { Tooltip } from 'react-leaflet'
+import { useRouteContext } from '../../../../../../context/RouteContext'
+import { addRoute } from '../../../../../../services/mapService'
+import RouteModel from "../../../../../../models/route"
+import LoadingModal from "../../../../../../components/LoadingModal"
+import "leaflet-routing-machine";
+import { DEPORT_LOCATION, TREATMENT_LOCATION } from '../../../../../../models/mcps'
 
-
+const LeafIcon = L.Icon.extend({
+        options: {}
+})
+const greenIcon = new LeafIcon({
+    iconUrl:
+    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
+    shadowUrl: iconShadow,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [50, 50]
+})
 
 
 const RouteCreateForm = ({
@@ -20,9 +35,22 @@ const RouteCreateForm = ({
     ...props
 }) => {
 
-    const { map, markers, markerDispatcher } = useMapContext()
+    const { markerDispatcher, map, routeControl } = useMapContext()
     const [ chosenMcps, setChosenMcps ] = useState([])
+    const [ routeNameValue, setRouteNameValue ] = useState("Route " + RouteModel.getNextId())
+    const { dispatcher: routeDispatcher } = useRouteContext()
     const { mcps } = useMcpContext()
+    const [ created, setCreated ] = useState(false)
+    const [ loading, setLoading ] = useState(false)
+
+    const handleClearWayPoints = () => {
+        const routeControlRef = routeControl.current
+        return () => {
+            if (created) {
+                routeControlRef.setWaypoints([])
+            }
+        }
+    }
 
     const onFinishForm = () => {
         return () => {
@@ -37,25 +65,9 @@ const RouteCreateForm = ({
     }, [])
 
     const handleInitMapSelector = () => {
-        const LeafIcon = L.Icon.extend({
-                options: {}
-        })
-        const greenIcon = new LeafIcon({
-            iconUrl:
-            "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
-            shadowUrl: iconShadow,
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [50, 50]
-        })
-
         const mcpMarkers = mcps?.map(mcp => {
             const markerIcon = chosenMcps.includes(mcp.id) ? {icon: greenIcon}:{}
-            return Marker.create({
-                ...markerIcon,
-                position: [mcp.location.x, mcp.location.y],
-                tooltip: mcp.name + '-' + mcp.location_name,
+            const eventHandlersProp = created ? {} : {
                 eventHandlers: {
                     // ...iconProp,
                     click: () => {
@@ -67,6 +79,13 @@ const RouteCreateForm = ({
                         })
                     }
                 }
+            }
+
+            return Marker.create({
+                ...markerIcon,
+                ...eventHandlersProp,
+                position: [mcp.location.x, mcp.location.y],
+                tooltip: mcp.name + '-' + mcp.location_name,
             })
         })
 
@@ -75,38 +94,75 @@ const RouteCreateForm = ({
         }
     }
 
-    useEffect(handleInitMapSelector, [markerDispatcher, mcps, chosenMcps])
+    const handleSubmitPress = async () => {
+        try {
+            setLoading(true)
+            const { data } = await addRoute({
+                name: routeNameValue,
+                contains: chosenMcps
+            })
+            routeDispatcher({type: 'add', data: {data}})
+            setCreated(true)
+
+            const wayPoints = chosenMcps.map(cmId => {
+                const mcp = mcps.find(m => m.id===cmId)
+                return L.latLng(mcp.location.x, mcp.location.y)
+            })   
+            routeControl.current.setWaypoints([
+                ...wayPoints
+            ]).addTo(map.target)
+        }
+        catch (e) {
+            console.log(e)
+        }
+        setLoading(false)
+    }
+
+    useEffect(handleInitMapSelector, [markerDispatcher, mcps, chosenMcps, created])
     useEffect(onFinishForm, [markerDispatcher])
+    useEffect(handleClearWayPoints, [created, routeControl])
 
     return (
-        <div className="flex-1">
-            <div className="flex justify-between mr-4">
-                <EButton className="py-2 px-8 text-white bg-rose-400 min-w-[90px] group active:opacity-60 transition-opacity" 
-                    onClick={onClose}
-                >
-                    <FontAwesomeIcon className="group-hover:-translate-x-2 transition-all" icon={faChevronLeft}/>
-                </EButton>
-                {chosenMcps.length > 1 && 
-                <EButton className="py-2 px-2 bg-emerald-500 text-white font-medium">
-                    Optimize Route
-                </EButton>}
+        <>
+            {loading && <LoadingModal/>}
+            <div className="flex-1">
+                <div className="flex justify-between mr-4">
+                    <EButton className="py-2 px-8 text-white bg-rose-400 min-w-[90px] group active:opacity-60 transition-opacity" 
+                        onClick={onClose}
+                    >
+                        <FontAwesomeIcon className="group-hover:-translate-x-2 transition-all" icon={faChevronLeft}/>
+                    </EButton>
+                    {chosenMcps.length > 1 && 
+                    <EButton className="py-2 px-2 bg-emerald-500 text-white font-medium hover:bg-emerald-600 transition-all"
+                        onClick={handleSubmitPress}
+                    >
+                        Optimize Route
+                    </EButton>}
+                </div>
+                <h3 className="mt-4 text-red-400">Choose MCP on the Map</h3>
+                <h3 className="text-lg font-medium text-emerald-500">Route Name</h3>
+                <input className="bg-slate-50 p-4 outline-none w-full mr-4 ring-2 mt-2"
+                    disabled={created}
+                    value={routeNameValue} 
+                    onChange={(e) => setRouteNameValue(e.target.value)}
+                />
+                <ul className="flex flex-col mt-4">
+                    {mcps.filter(m => chosenMcps.includes(m.id))
+                    .map(mcp => (
+                        <ChosenMcpItem
+                            key={mcp.id}
+                            data={mcp}
+                            onUnselect={handleUnSelectMcp}
+                            created={created}
+                        />
+                    ))}
+                </ul>
             </div>
-            <h3 className="text-xl mt-4 text-emerald-500 ">Choose MCP on the Map</h3>
-            <ul className="flex flex-col mt-4">
-                {mcps.filter(m => chosenMcps.includes(m.id))
-                .map(mcp => (
-                    <ChosenMcpItem
-                        key={mcp.id}
-                        data={mcp}
-                        onUnselect={handleUnSelectMcp}
-                    />
-                ))}
-            </ul>
-        </div>
+        </>
     )
 }
 
-const ChosenMcpItem = ({data, onUnselect}) => {
+const ChosenMcpItem = ({data, onUnselect, created}) => {
 
     const handleUnSelect = () => {
         onUnselect(data.id)
@@ -116,7 +172,8 @@ const ChosenMcpItem = ({data, onUnselect}) => {
         <div className='bg-slate-50 h-14 font-medium text-slate-700 text-lg grid grid-cols-[100px_1fr_50px]'>
             <h3 className='text-slate-500 m-auto'>{data.name}</h3>
             <h3 className='my-auto ml-4'>{data.location_name}</h3>
-            <EButton className="text-red-400 w-full h-full hover:rotate-12 transition-all "
+            <EButton className="text-red-400 w-full h-full hover:-translate-x-2 transition-all "
+                disabled={created}
                 onClick={handleUnSelect}
             >
                 <FontAwesomeIcon icon={faClose} />

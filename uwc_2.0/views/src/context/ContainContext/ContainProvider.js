@@ -7,10 +7,12 @@ const useContainContext = () => useContext()
 
 const ContainProvider = ({children}) => {
 
-    const [ contains, dispatcher ] = useReducer(containReducer)
+    const [ contains, dispatcher ] = useReducer(containReducer, undefined)
 
     const handleFetchContain = () => {
-        if (contains !== undefined) return 
+
+        if (contains) return 
+
         const fetchContains = async () => {
             try {
                 const result = await getContains()
@@ -23,10 +25,12 @@ const ContainProvider = ({children}) => {
         fetchContains()
     }
 
-    useEffect(handleFetchContain, [dispatcher, contains])
+    useEffect(handleFetchContain, [contains])
 
     return (
-        <ContainContext.Provider>
+        <ContainContext.Provider 
+            value={{contains, dispatcher}}
+        >
             {children}
         </ContainContext.Provider>
     )

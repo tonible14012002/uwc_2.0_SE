@@ -1,5 +1,5 @@
-
 import McpModel from "../models/mcps"
+import RouteModel from "../models/route"
 
 const getMcps = async () => {
     return new Promise(resolve => {
@@ -99,7 +99,7 @@ const getRoutes = async () => {
 const addRoute = async (data) => {
     return new Promise(resolve => {
         setTimeout(() => {
-            resolve({data: data})
+            resolve({data: RouteModel.create(data)})
         }, 1000);
     })
 }
