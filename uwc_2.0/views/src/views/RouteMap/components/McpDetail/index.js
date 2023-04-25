@@ -9,7 +9,7 @@ import { useMapContext } from "../../context/MapContext"
 import { useEffect } from "react"
 import Marker from "../../mapAssets/Marker"
 import { DEFAULT_MAP_ZOOM } from "../.."
-import { DEPORT_LOCATION, TREATMENT_LOCATION } from "../../../../models/mcps"
+import { TREATMENT_LOCATION } from "../../../../models/mcps"
 import * as L from 'leaflet'
 import Circle from "../../mapAssets/Circle"
 
@@ -107,7 +107,7 @@ const MCPDetail = ({
     }, [employeeDispatcher, McpDispatcher, id, MCP])
 
 
-    useEffect(handleShowMcpMap, [MCP, setMapCenter])
+    useEffect(handleShowMcpMap, [MCP, setMapCenter, circleDispatcher, markerDispatcher, setMapZoom])
 
     return (
         <>

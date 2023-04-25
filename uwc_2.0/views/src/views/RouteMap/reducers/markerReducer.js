@@ -1,7 +1,6 @@
 
 
 const markerReducer = (state, action) => {
-    console.log('marker data', state)
     switch (action.type) {
          case 'get': {
             return action.data
@@ -34,6 +33,8 @@ const markerReducer = (state, action) => {
         }   
         case 'reset': 
             return []
+        case 'set': 
+            return action.data
         default:
             return []
     }

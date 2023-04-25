@@ -8,12 +8,15 @@ import LoadingModal from "../../../../components/LoadingModal"
 import { deleteMyEmployee } from "../../../../services/emlpoyeServices"
 import { deleteMyVehicle } from "../../../../services/vehicleServices"
 import { useVehicleContext } from "../../../../context/VehicleContext"
+import { useMcpContext } from "../../../../context/McpContext/McpProvider"
 
 const AssetDeleteModal = ({assetId, waitTime = 3, assetType, onClose, ...props}) => {
 
     const [ count, setCount ] = useState(waitTime)
     const { employees, dispatcher: employeeDispatcher } = useEmployeeContext()
     const { vehicles, dispatcher: vehicleDispatcher } = useVehicleContext()
+    const { mcps, dispatcher: mcpDispatcher } = useMcpContext()
+
     const [ loading, setLoading ] = useState(false)
     const isMounted = useIsMounted()
 
@@ -22,12 +25,22 @@ const AssetDeleteModal = ({assetId, waitTime = 3, assetType, onClose, ...props})
             try {
                 setLoading(true)
                 await deleteMyEmployee(assetId)
-                const vehicleId = employees.find(em => em.id === assetId).vehicle
                 employeeDispatcher({type: 'delete', data: {id: assetId}})
-                vehicleDispatcher({type: 'patch', data: {id: vehicleId, data: {
-                    driver: null,
-                    driver_name: null
-                }}})
+
+                const employee = employees.find(em => em.id === assetId)
+                if (employee.vehicle) {
+                    vehicleDispatcher({type: 'patch', data: {id: employee.vehicle, data: {
+                        driver: null,
+                        driver_name: null
+                    }}})
+                }
+                if (employee.mcp) {
+                    const MCP = mcps.find(mcp => mcp.employees.includes(employee.id))
+                    const remainEmployees = MCP.employees.filter(emId => emId !== employee.id)
+                    mcpDispatcher({type: 'patch', data: {id: MCP.id, data: {
+                        employees: remainEmployees
+                    }}})
+                }
                 // ROUTE dispatch
             }
             catch(e) {

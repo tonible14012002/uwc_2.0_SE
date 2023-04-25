@@ -4,46 +4,13 @@ import EButton from "../../../../components/EButton"
 import SearchBar from "../SearchBar"
 import { useCallback, useState } from "react"
 import RouteDetail from "../RouteDetail"
-
-const routes = [
-    {
-        id: 0,
-    },
-    {
-        id: 1,
-    },
-    {
-        id: 2,
-    },
-    {
-        id: 3,
-    },
-    {
-        id: 4,
-    },
-    {
-        id: 5,
-    },
-    {
-        id: 6,
-    },
-    {
-        id: 7,
-    },
-    {
-        id: 8,
-    },
-    {
-        id: 9,
-    },
-    {
-        id: 10,
-    },
-]
+import { useRouteContext } from "../../../../context/RouteContext"
 
 const RouteList = () => {
 
     const [ showRouteDetail, setShowRouteDetail ] = useState({visible: false, id: null})
+
+    const { routes } = useRouteContext()
 
     const handleRoutePress = useCallback((id) => {
         setShowRouteDetail({visible: true, id})
@@ -56,10 +23,10 @@ const RouteList = () => {
     return (
         <div className="w-full flex">
             <div className="flex flex-col gap-4 min-w-full">
-                <SearchBar className="w-full max-w-[400px] h-12"/>
+                <SearchBar className="h-12 mr-4"/>
                 <section className="h-[500px] pr-4 overflow-auto">
                     {!showRouteDetail.visible && 
-                    routes.map((route => (
+                    routes?.map((route => (
                         <RouteItem
                             key={route.id}
                             id={route.id}

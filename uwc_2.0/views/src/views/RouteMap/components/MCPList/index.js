@@ -20,7 +20,7 @@ const MCPList = () => {
     return (
         <div className="w-full flex">
             <div className="flex flex-col gap-4 min-w-full">
-                <SearchBar className="w-full max-w-[400px] h-12" />
+                <SearchBar className="h-12 mr-4"/>
                 <section className="h-[500px] pr-4 overflow-auto">
                     {mcps?.map(mcp => (
                         <McpItem
