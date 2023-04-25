@@ -17,7 +17,7 @@ const PageRoute = () => {
             <EButton
                 to={'/employee'}
             >
-                <div className={`px-8 py-3 ${pageName === pages.Employee ? "hover:bg-blue-500 text-white bg-blue-400": "hover:text-blue-500"} transition-all `}>
+                <div className={`px-8 py-3 ${pageName === pages.Employee || pageName === pages.Schedule ? "hover:bg-blue-500 text-white bg-blue-400": "hover:text-blue-500"} transition-all `}>
                     Employee
                 </div>
             </EButton>

@@ -7,7 +7,6 @@ import ScrollToTop from "./components/ScrollToTop";
 import { VehicleProvider } from "./context/VehicleContext";
 
 function App() {
-
   return (
     <BrowserRouter>
       <Routes>

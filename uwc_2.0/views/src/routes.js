@@ -34,8 +34,8 @@ const privateRoutes = [
         component: RouteMap
     },
     {
-        path: 'schedule',
-        component: Schedule
+        path: 'schedule/:id',
+        component: Schedule,
     }
 ];
 

@@ -37,8 +37,8 @@ const Employee = () => {
         setShowDeleteModal({show: false, id: null})
     }, [setShowDeleteModal])
 
-    const handleSchedulePress = useCallback(() => {
-        navigate('/schedule');
+    const handleSchedulePress = useCallback((id) => {
+        navigate(`/schedule/${id}`);
     },[])
 
     return (
