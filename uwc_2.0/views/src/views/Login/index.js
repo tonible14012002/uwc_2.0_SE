@@ -1,8 +1,6 @@
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
 import {React, useState} from "react";
 import { useNavigate } from "react-router-dom";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.min.js';
 import './loginForm.css';
 import axios from 'axios';
 //a

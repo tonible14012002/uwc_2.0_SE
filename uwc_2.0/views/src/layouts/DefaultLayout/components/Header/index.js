@@ -13,7 +13,7 @@ const Header = ({onHeaderLoad}) => {
     }, [onHeaderLoad])
 
     return (
-        <header className="w-full fixed h-[5rem] desktop:h-[5rem] bg-white px-4 shadow-sm top-0 z-40" 
+        <header className="w-full fixed h-[5rem] desktop:h-[5rem] bg-white px-5 shadow-sm top-0 z-40" 
             ref={headerRef}
         >
             <div className="max-w-[100rem] m-auto h-full">

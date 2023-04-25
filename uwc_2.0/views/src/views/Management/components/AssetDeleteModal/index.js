@@ -12,8 +12,8 @@ import { useVehicleContext } from "../../../../context/VehicleContext"
 const AssetDeleteModal = ({assetId, waitTime = 3, assetType, onClose, ...props}) => {
 
     const [ count, setCount ] = useState(waitTime)
-    const { dispatcher: employeeDispatcher } = useEmployeeContext()
-    const { dispatcher: vehicleDispatcher } = useVehicleContext()
+    const { employees, dispatcher: employeeDispatcher } = useEmployeeContext()
+    const { vehicles, dispatcher: vehicleDispatcher } = useVehicleContext()
     const [ loading, setLoading ] = useState(false)
     const isMounted = useIsMounted()
 
@@ -22,7 +22,13 @@ const AssetDeleteModal = ({assetId, waitTime = 3, assetType, onClose, ...props})
             try {
                 setLoading(true)
                 await deleteMyEmployee(assetId)
-                employeeDispatcher({type: "delete", data: {id: assetId}})
+                const vehicleId = employees.find(em => em.id === assetId).vehicle
+                employeeDispatcher({type: 'delete', data: {id: assetId}})
+                vehicleDispatcher({type: 'patch', data: {id: vehicleId, data: {
+                    driver: null,
+                    driver_name: null
+                }}})
+                // ROUTE dispatch
             }
             catch(e) {
                 console.log(e)
@@ -36,7 +42,11 @@ const AssetDeleteModal = ({assetId, waitTime = 3, assetType, onClose, ...props})
             try {
                 setLoading(true)
                 await deleteMyVehicle(assetId)
+                const employeeId = vehicles.find(ve => ve.id === assetId).employee
                 vehicleDispatcher({type: 'delete', data: {id: assetId}})
+                employeeDispatcher({type: 'patch', data: {id: employeeId, data: {
+                    vehicle: null
+                }}})
             }
             catch (e) {
                 console.log(e)
