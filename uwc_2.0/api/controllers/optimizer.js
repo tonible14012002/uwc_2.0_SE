@@ -16,38 +16,6 @@ export const OptimizerController = {
 
         const PointsInfo = []
         const MCPs = req.body.MCPs;
-        // const MCPs = {
-        //     point0: {
-        //         longitude: 10,
-        //         latitude: 11,
-        //         isAvailable: true,
-        //     },
-        //     point1: {
-        //         longitude: 12,
-        //         latitude: 13,
-        //         isAvailable: true,
-        //     },
-        //     point2: {
-        //         longitude: 14,
-        //         latitude: 15,
-        //         isAvailable: true,
-        //     },
-        //     point3: {
-        //         longitude: 16,
-        //         latitude: 17,
-        //         isAvailable: true,
-        //     },
-        //     point4: {
-        //         longitude: 18,
-        //         latitude: 19,
-        //         isAvailable: true,
-        //     },
-        //     point5: {
-        //         longitude: 10,
-        //         latitude: 12,
-        //         isAvailable: true,
-        //     },
-        // }
 
         const Parent = []
         const Data = [];
