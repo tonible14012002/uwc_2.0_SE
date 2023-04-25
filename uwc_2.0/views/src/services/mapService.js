@@ -9,8 +9,8 @@ const getMcps = async () => {
                     //id: 0
                     name: "MCP 0",
                     location: {
-                        x: 50.2,
-                        y: 70.0
+                        x: 10.762357,
+                        y: 106.662085
                     },
                     work_radius: 600,
                     location_name: "102 Pham Ngu Lao",
@@ -19,8 +19,8 @@ const getMcps = async () => {
                     //id: 1
                     name: "MCP 1",
                     location: {
-                        x: 70.2,
-                        y: 80.0
+                        x: 10.768384,
+                        y: 106.658254
                     },
                     work_radius: 600,
                     location_name: "10 Le Thanh Ton",
@@ -29,8 +29,8 @@ const getMcps = async () => {
                     //id: 2
                     name: "MCP 2",
                     location: {
-                        x: 40.2,
-                        y: 90.0
+                        x: 10.769650,
+                        y: 106.670166
                     },
                     location_name: "102 Ta Quang Buu",
                     work_radius: 600,
@@ -39,8 +39,8 @@ const getMcps = async () => {
                     //id: 3
                     name: "MCP 3",
                     location: {
-                        x: 90.2,
-                        y: 120.0
+                        x: 10.775690,
+                        y: 106.667341
                     },
                     location_name: "90 Bac Hai",
                     work_radius: 600,
@@ -49,8 +49,8 @@ const getMcps = async () => {
                     //id: 4
                     name: "MCP 4",
                     location: {
-                        x: 70.2,
-                        y: 80.0
+                        x: 10.762120,
+                        y: 106.669341
                     },
                     location_name: "20 Le Thanh Ton",
                     work_radius: 600,
@@ -59,8 +59,8 @@ const getMcps = async () => {
                     //id: 5
                     name: "MCP 5",
                     location: {
-                        x: 70.2,
-                        y: 80.0
+                        x: 10.757372,
+                        y: 106.663417
                     },
                     location_name: "87 Cao Thang",
                     work_radius: 600,

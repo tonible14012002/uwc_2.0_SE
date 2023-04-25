@@ -3,11 +3,15 @@ import EButton from "../../../../components/EButton"
 import { faChevronLeft, faClose, faLocation, faPenToSquare } from "@fortawesome/free-solid-svg-icons"
 import { useMcpContext } from "../../../../context/McpContext/McpProvider"
 import { useEmployeeContext } from "../../../../context/EmployeeContext/employeeProvider"
-import { useCallback, useState } from "react"
+import { memo, useCallback, useState } from "react"
 import EmployeeSearchTab from "../../../../components/EmployeeSearchTab"
 import { useMapContext } from "../../context/MapContext"
 import { useEffect } from "react"
-
+import Marker from "../../mapAssets/Marker"
+import { DEFAULT_MAP_ZOOM } from "../.."
+import { DEPORT_LOCATION, TREATMENT_LOCATION } from "../../../../models/mcps"
+import * as L from 'leaflet'
+import Circle from "../../mapAssets/Circle"
 
 const MCPDetail = ({
     id,
@@ -18,7 +22,7 @@ const MCPDetail = ({
     const { employees, dispatcher: employeeDispatcher } = useEmployeeContext()
     const [ clickPosition, setClickPosition ] = useState({x:0, y:0})
     const [ showEmployeeSelector, setShowEmployeeSelector ] = useState(false)
-    const { setMapCenter } = useMapContext()
+    const { setMapCenter, circleDispatcher, markerDispatcher, setMapZoom } = useMapContext()
 
     let mcpEmployees= null
     const MCP = mcps.find(m => m.id === id)
@@ -29,10 +33,39 @@ const MCPDetail = ({
     }
 
     const handleShowMcpMap = () => {
+
         setMapCenter([
             MCP.location.x,
             MCP.location.y
         ])
+        setMapZoom(prev => prev + 1)
+
+        const markerId = Marker.getNextId()
+        markerDispatcher({type: 'add', data: {
+            data: Marker.create({
+                position: [MCP.location.x, MCP.location.y], 
+                popup: () => (
+                    <>{MCP.name} <hr/> {MCP.location_name}</>
+                )
+            })
+        }})
+        const circleId = Circle.getNextId()
+        circleDispatcher({type: 'add', data: {
+            data: Circle.create({ 
+            center: [MCP.location.x, MCP.location.y], 
+            radius: MCP.work_radius
+        })}})
+
+        return () => {
+            markerDispatcher({type: 'delete', data: {
+                id: markerId
+            }})
+            circleDispatcher({type: 'delete', data: {
+                id: circleId
+            }})
+            setMapCenter([TREATMENT_LOCATION.x, TREATMENT_LOCATION.y])
+            setMapZoom(DEFAULT_MAP_ZOOM)
+        }
     }
 
     const handleAssignEmployeePress = useCallback((e) => {
@@ -62,7 +95,6 @@ const MCPDetail = ({
     const handleUnAssignEmployee = useCallback((employeeId) => {
 
         const remainEmployees = MCP.employees.filter(em => em !== employeeId)
-        console.log(remainEmployees)
 
         McpDispatcher({type: 'patch', data: {
             id: id,
@@ -148,4 +180,4 @@ const MCPDetail = ({
     )
 }
 
-export default MCPDetail
+export default memo(MCPDetail)

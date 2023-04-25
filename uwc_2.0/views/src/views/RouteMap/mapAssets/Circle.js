@@ -5,7 +5,8 @@ const MapCirCle = () => {
         create: (data) => ({
             id: autoIncreaseId++,
             ...data
-        })
+        }),
+        getNextId: () => autoIncreaseId
     }
 }
 

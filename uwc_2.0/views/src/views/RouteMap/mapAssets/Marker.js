@@ -6,7 +6,8 @@ const Marker = () => {
         create: (data) => ({
             id: autoIncreaseId++,
             ...data
-        })
+        }),
+        getNextId: () => autoIncreaseId
     })
 }
 

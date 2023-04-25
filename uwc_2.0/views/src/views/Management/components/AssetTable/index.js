@@ -1,20 +1,21 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faCutlery, faPen, faTrash } from "@fortawesome/free-solid-svg-icons"
+import { faCutlery, faPen, faTrash, faCalendarAlt  } from "@fortawesome/free-solid-svg-icons"
 import EButton from "../../../../components/EButton"
 
 const AssetTable = ({
     columnNames = [
-        'Id', 
-        'Fullname', 
-        'Role', 
-        'Contact', 
-        'Hired Date', 
+        'Id',
+        'Fullname',
+        'Role',
+        'Contact',
+        'Hired Date',
     ],
     AssetKeys=['id', 'fullname', 'role', 'contact', 'hired_date'],
     assets=[],
     gridClassName="",
     onDeleteAsset,
     onUpdateAsset,
+    onCalendarAsset,
     ...cellComponents
 }) => {
 
@@ -38,6 +39,7 @@ const AssetTable = ({
                     gridClassName={gridClassName}
                     onDeleteAsset={onDeleteAsset}
                     onUpdateAsset={onUpdateAsset}
+                    onCalendarAsset={onCalendarAsset}
                     {...cellComponents}
                 />
             ))}
@@ -48,6 +50,7 @@ const AssetTable = ({
 const AssetRow = ({
     onUpdateAsset,
     onDeleteAsset,
+    onCalendarAsset,
     asset,
     assetKeys,
     gridClassName,
@@ -61,6 +64,11 @@ const AssetRow = ({
 
     const handleUpdatePress = (e) => {
         onUpdateAsset(asset.id)
+    }
+
+    const handleSchedulePress = (e) => {
+        e.preventDefault()
+        onCalendarAsset(asset.id)
     }
 
     return (
@@ -79,7 +87,7 @@ const AssetRow = ({
                         </div>
                 )})}
                 <ul className="flex gap-6 text-sm">
-                    <EButton 
+                    <EButton
                         className="text-teal-500"
                         onClick={handleUpdatePress}
                     >
@@ -90,6 +98,12 @@ const AssetRow = ({
                         onClick={handleDeletePress}
                     >
                         <FontAwesomeIcon icon={faTrash}/>
+                    </EButton>
+                    <EButton
+                        className="text-sky-500"
+                        onClick={handleSchedulePress}
+                    >
+                        <FontAwesomeIcon icon={faCalendarAlt }/>
                     </EButton>
                 </ul>
             </div>

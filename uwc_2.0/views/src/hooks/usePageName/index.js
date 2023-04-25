@@ -4,7 +4,8 @@ const routesMap = {
     Dashboard: '/',
     Employee: '/employee',
     RouteMap: '/route-map',
-    Vehicle: '/vehicle'
+    Vehicle: '/vehicle',
+    Message: '/message'
 }
 
 const usePageName = () => {
@@ -13,7 +14,8 @@ const usePageName = () => {
         Dashboard: 'Dashboard',
         Employee : 'Employee',
         RouteMap : 'RouteMap',
-        Vehicle: 'Vehicle'
+        Vehicle: 'Vehicle',
+        Message: 'Message'
     }
     const handleGetPageName = () => {
         let location = window.location.pathname;

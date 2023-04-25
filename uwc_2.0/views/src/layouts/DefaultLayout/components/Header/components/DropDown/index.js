@@ -38,7 +38,7 @@ const DropDown = () => {
                     <FontAwesomeIcon className="text-xs hidden desktop:block" icon={faChevronDown}/>
                     <FontAwesomeIcon className="text-xs desktop:hidden" icon={faBars}/>
                 </div>
-               
+
             </EButton>
             {visible && <ul className="absolute bg-white top-14 right-0 w-[12rem] m-0 shadow-md rounded-md">
                 <EButton
@@ -60,12 +60,18 @@ const DropDown = () => {
                     Vehicle
                 </EButton>
                 <EButton
+                    className={` desktop:hidden block w-full text-start px-8 py-3 ${pageName === pages.Message && "bg-slate-100"} hover:bg-slate-50`}
+                    to={'/message'}
+                >
+                    Message
+                </EButton>
+                <EButton
                     className={` desktop:hidden block w-full text-start px-8 py-3 ${pageName === pages.RouteMap && "bg-slate-100"} hover:bg-slate-50`}
                     to={'/route-map'}
                 >
                     Map
                 </EButton>
-                
+
                 <div className="divider w-full border-b"/>
                 <EButton
                     className="w-full text-start px-8 py-3 hover:bg-slate-50 block"

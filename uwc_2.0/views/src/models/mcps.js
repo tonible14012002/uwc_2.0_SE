@@ -1,11 +1,11 @@
 const DEPORT_LOCATION = {
-    x: 30,
-    y: 30
+    x: 10.782357,
+    y: 106.672085
 }
 
 const TREATMENT_LOCATION = {
-    x: 100,
-    y: 100
+    x: 10.762357,
+    y: 106.662085
 }
 
 const McpModel = () => {

@@ -1,6 +1,7 @@
 
 
 const markerReducer = (state, action) => {
+    console.log('marker data', state)
     switch (action.type) {
          case 'get': {
             return action.data
@@ -26,7 +27,6 @@ const markerReducer = (state, action) => {
         }
         case 'add': {
             const { data } = action.data
-            console.log('asdasijdoijsao', data)
             if (Array.isArray(data)) {
                 return [...data, ...state]
             }
