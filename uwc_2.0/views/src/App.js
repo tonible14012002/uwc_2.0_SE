@@ -10,7 +10,6 @@ import { VehicleProvider } from "./context/VehicleContext";
 import McpProvider from "./context/McpContext/McpProvider";
 
 function App() {
-
   return (
     <BrowserRouter>
       <Routes>

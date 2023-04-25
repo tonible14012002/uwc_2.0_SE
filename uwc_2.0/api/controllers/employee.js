@@ -39,6 +39,8 @@ export const employeeController = {
 
     postEmployee: (req,res) => {
         const q = "insert into employee(`id`,`name`, `role`, `email`, `phoneNumber`,`hired_date`) values(?)"
+        const MCPs = req.body;
+        console.log(MCPs)
         const values = [
             req.body.id,
             req.body.name,

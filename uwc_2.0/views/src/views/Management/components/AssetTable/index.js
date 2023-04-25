@@ -66,8 +66,8 @@ const AssetRow = ({
         onUpdateAsset(asset.id)
     }
 
-    const handleSchedulePress = (e) => {
-        e.preventDefault()
+    const handleSchedulePress = () => {
+        console.log("ASSET ID: ", asset.id);
         onCalendarAsset(asset.id)
     }
 

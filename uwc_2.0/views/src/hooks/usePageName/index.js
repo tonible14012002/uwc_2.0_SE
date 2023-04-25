@@ -5,7 +5,8 @@ const routesMap = {
     Employee: '/employee',
     RouteMap: '/route-map',
     Vehicle: '/vehicle',
-    Message: '/message'
+    Message: '/message',
+    Schedule: '/schedule'
 }
 
 const usePageName = () => {
@@ -15,14 +16,16 @@ const usePageName = () => {
         Employee : 'Employee',
         RouteMap : 'RouteMap',
         Vehicle: 'Vehicle',
-        Message: 'Message'
+        Message: 'Message',
+        Schedule : 'Schedule',
     }
     const handleGetPageName = () => {
         let location = window.location.pathname;
         let currentPage = undefined;
         for (let page in routesMap) {
             if (location.includes(routesMap[page])) {
-                currentPage = page;
+                currentPage = page
+                if (currentPage === 'Schedule') currentPage = 'Employee'
             };
         }
         setPageName(currentPage);

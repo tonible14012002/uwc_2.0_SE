@@ -23,7 +23,7 @@ const EmployeeForm = ({
     const isMounted = useIsMounted()
 
     const handleLoadInitData = () => {
-        if (employeeId == null) return 
+        if (employeeId == null) return
         const employeeData = employees.find(e => e.id === employeeId)
         for (let formKey in employeeData) {
             setValue(formKey, employeeData[formKey])
@@ -45,7 +45,7 @@ const EmployeeForm = ({
             if (isMounted()) {
                 setLoading(false)
             }
-            return 
+            return
         }
         // Create
         try {
@@ -53,7 +53,7 @@ const EmployeeForm = ({
             const result = await addMyEmployee(data)
             dispatcher({type: 'add', data: {data: result.data}})
         }
-        
+
         catch (e) {
             console.log(e)
         }
@@ -82,11 +82,11 @@ const EmployeeForm = ({
 
                         <hr className="mb-2"/>
 
-                        {employeeId ? 
+                        {employeeId ?
                         <p className="text-sm font-medium text-slate-500">
                             ! If you change your employee role, remember to reassign MCP or Route
                         </p>
-                        : 
+                        :
                         <p className="text-sm font-medium text-slate-500">
                             You will need to assign schedule and MCP or Route to this employee later.
                         </p>}
@@ -98,7 +98,7 @@ const EmployeeForm = ({
                                 {...register('fullname', {required: true})}
                             />
                         </div>
-                        
+
                         <div className="flex flex-col bg-slate-100 gap-2 mb-4">
                             <label className="text-sm font-semibold text-slate-600 pl-2">Phone</label>
                             <input className="outline-none p-2 bg-slate-50"
@@ -137,4 +137,4 @@ const EmployeeForm = ({
     )
 }
 
-export default EmployeeForm 
+export default EmployeeForm
