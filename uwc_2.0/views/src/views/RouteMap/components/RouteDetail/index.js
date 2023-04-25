@@ -1,45 +1,14 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import EButton from "../../../../components/EButton"
-import { faChevronLeft, faClose, faPenToSquare, faPencilSquare } from "@fortawesome/free-solid-svg-icons"
-import { useCallback, useState } from "react"
+import { faChevronLeft, faClose, faPenToSquare } from "@fortawesome/free-solid-svg-icons"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import EmployeeSearchTab from "../../../../components/EmployeeSearchTab"
 import { useEmployeeContext } from "../../../../context/EmployeeContext"
-
-const MCPS = [
-    {
-        id:0,
-        name: "MCP 0",
-        location: {x: 50.2, y:100},
-        location_name: "14 Pham ngu Lao",
-        route:0,
-    },
-    {
-        id:1,
-        name: "MCP 1",
-        location: {x: 50.2, y:200},
-        location_name: "14 Hai Ba Trung",
-        route:0,
-    },
-    {
-        id:2,
-        name: "MCP 2",
-        location: {x: 250.2, y:100},
-        location_name: "14 Pham ngu Lao",
-        route:0,
-    },
-    {
-        id:3,
-        name: "MCP 3",
-        location: {x: 350.2, y:500},
-        location_name: "14 Pham ngu Lao",
-        route:0,
-    },
-]
-
-const data = {
-    employee: null,
-    employeeName: null
-}
+import { useMcpContext } from "../../../../context/McpContext/McpProvider"
+import { useRouteContext } from "../../../../context/RouteContext"
+import { useMapContext } from "../../context/MapContext"
+import { DEPOT_POINT, TREATMENT_POINT } from "../../../../models/mcps"
+import L from "leaflet"
 
 const RouteDetail = ({
     id,
@@ -47,40 +16,31 @@ const RouteDetail = ({
 }) => {
 
     const [ clickPosition, setClickPosition ] = useState({x:0, y:0})
-    const [ routeData, setRouteData ] = useState(data)
-    const [ MCPs, setMCPs ] = useState([
-        {
-            id:0,
-            name: "MCP 0",
-            location: {x: 50.2, y:100},
-            location_name: "14 Pham ngu Lao",
-            route:id,
-        },
-        {
-            id: 1,
-            name: "MCP 1",
-            location: {x: 50.2, y:200},
-            location_name: "14 Hai Ba Trung",
-            route:id,
-        },
-        {
-            id: 2,
-            name: "MCP 2",
-            location: {x: 250.2, y:100},
-            location_name: "14 Pham ngu Lao",
-            route:id,
-        },
-        {
-            id: 3,
-            name: "MCP 3",
-            location: {x: 350.2, y:500},
-            location_name: "14 Pham ngu Lao",
-            route:id,
-        },
-    ])
-    const [ showEmployeeSelector, setShowEmployeeSelector ] = useState(false)
+    const { mcps } = useMcpContext()
+    const { routes } = useRouteContext()
+    const { employees } = useEmployeeContext()
+    const { routeControl } = useMapContext()
 
-    const { dispatcher } = useEmployeeContext(0)
+    const routeData = useMemo(() => routes.find(r => r.id === id), [routes, id])
+    const routeMcps = useMemo(() => routeData.contains.map(mid => mcps.find(m => m.id === mid)), [mcps, routeData])
+    const routeEmployee = employees.find(em => em.route === id)
+
+    const [ showEmployeeSelector, setShowEmployeeSelector ] = useState(false)
+    const { dispatcher: employeeDispatcher } = useEmployeeContext()
+
+    const handleShowRoute = () => {
+        const controlRef = routeControl.current
+        const wayPoints = routeMcps.map(mcp => L.latLng(mcp.location.x, mcp.location.y))
+        controlRef.setWaypoints([
+            DEPOT_POINT,
+            ...wayPoints,
+            TREATMENT_POINT
+        ])
+
+        return () => {
+            controlRef.setWaypoints([])
+        }
+    }
 
     const handleAssignEmployeePress = useCallback((e) => {
         setClickPosition({
@@ -99,24 +59,23 @@ const RouteDetail = ({
     }, [])
 
     const handleEmployeeSelect = useCallback((employeeId, fullname) => {
-        dispatcher({type: 'patch', data: {
+        employeeDispatcher({type: 'patch', data: {
             id: employeeId,
             data: {
                 route: id
             }
         }})
-        setRouteData({employee: employeeId, employeeName: fullname})
-
-    }, [dispatcher, id])
+    }, [employeeDispatcher, id])
 
     const handleUnAssignEmployee = useCallback(() => {
-        const employeeId = routeData.employee
-        dispatcher({type: 'patch', data: {
+        const employeeId = routeEmployee.id
+        employeeDispatcher({type: 'patch', data: {
             id: employeeId,
             data: {route: null}
         }})
-        setRouteData({employee: null, employeeName: null})
-    }, [routeData, dispatcher])
+    }, [employeeDispatcher, routeEmployee])
+
+    useEffect(handleShowRoute, [routeControl, routeMcps])
 
     return (
         <>
@@ -138,9 +97,9 @@ const RouteDetail = ({
 
             <section className="mt-2">
                 <h3 className="bg-slate-100 p-2 font-medium text-slate-700">Employee</h3>
-                {routeData.employee !== null ? 
+                {routeEmployee ? 
                 <div className="bg-slate-50 p-2 py-4 flex justify-between">
-                    <span>{routeData.employeeName}</span>
+                    <span>{routeEmployee.fullname}</span>
                     <EButton className="text-red-400 hover:pr-2 active:opacity-60 transition-all"
                         onClick={handleUnAssignEmployee}
                     >
@@ -165,7 +124,7 @@ const RouteDetail = ({
                         <span>Name</span>
                         <span>Location</span>
                     </section>
-                    {MCPs.map(mcp => (
+                    {routeMcps.map(mcp => (
                         <MCPRow
                             key={mcp.id}
                             data={mcp}

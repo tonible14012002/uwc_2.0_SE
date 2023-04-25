@@ -30,7 +30,21 @@ const RouteMap = () => {
     const routeControl = useRef()
 
     useEffect(() => {
-        routeControl.current = L.Routing.control({})
+        routeControl.current = L.Routing.control({
+            // show: false,
+            lineOptions: {
+                styles: [{color: 'blue', opacity: 0.5, weight: 5}]
+            },
+            showAlternatives: false,
+            addWaypoints: false, // Disable adding of waypoints
+  draggableWaypoints: false, // Disable dragging of waypoints
+  removeWaypoints: false, // Disable removing of waypoints
+  routeWhileDragging: false, // Disable route calculation while dragging
+  collapsible: true, // Allow collapsing of the control
+  fitSelectedRoutes: true, // Fit the map to the selected route
+  altLineOptions: null, // Hide alternative routes
+  createMarker: function() { return null; } // Hide markers
+        })
     }, [])
 
     const handleShowMCPMarkers = () => {

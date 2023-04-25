@@ -1,5 +1,4 @@
 
-import './style.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import EButton from "../../../../../../components/EButton"
 import { faChevronLeft, faClose } from "@fortawesome/free-solid-svg-icons"
@@ -14,7 +13,8 @@ import { addRoute } from '../../../../../../services/mapService'
 import RouteModel from "../../../../../../models/route"
 import LoadingModal from "../../../../../../components/LoadingModal"
 import "leaflet-routing-machine";
-import { DEPORT_LOCATION, TREATMENT_LOCATION } from '../../../../../../models/mcps'
+import { DEPORT_LOCATION, DEPOT_POINT, TREATMENT_LOCATION, TREATMENT_POINT } from '../../../../../../models/mcps'
+import axios from "axios"
 
 const LeafIcon = L.Icon.extend({
         options: {}
@@ -28,6 +28,20 @@ const greenIcon = new LeafIcon({
     popupAnchor: [1, -34],
     shadowSize: [50, 50]
 })
+
+
+// const getOptimizedRoute = (mcps) => {
+//     let MCPs = {}
+//     mcps.forEach(mcp => {
+//         MCPs[]
+//     })
+//     const data = {
+//         MCPs: {
+
+//         }
+//     }
+//     return axios.post('http://127.0.0.1:8080/api/optimizer/postRoute/', data)
+// }
 
 
 const RouteCreateForm = ({
@@ -109,7 +123,9 @@ const RouteCreateForm = ({
                 return L.latLng(mcp.location.x, mcp.location.y)
             })   
             routeControl.current.setWaypoints([
-                ...wayPoints
+                DEPOT_POINT,
+                ...wayPoints,
+                TREATMENT_POINT
             ]).addTo(map.target)
         }
         catch (e) {

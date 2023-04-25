@@ -39,6 +39,7 @@ const RouteList = () => {
                 {showRouteDetail.visible &&
                 <RouteDetail
                     onClose={handleCloseRouteDetail}
+                    id={showRouteDetail.id}
                 />}
             </section>
         </div>
