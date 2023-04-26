@@ -29,20 +29,37 @@ const greenIcon = new LeafIcon({
     shadowSize: [50, 50]
 })
 
-
-// const getOptimizedRoute = (mcps) => {
-//     let MCPs = {}
-//     mcps.forEach(mcp => {
-//         MCPs[]
-//     })
-//     const data = {
-//         MCPs: {
-
-//         }
-//     }
-//     return axios.post('http://127.0.0.1:8080/api/optimizer/postRoute/', data)
-// }
-
+const optimizeRoute = async (chosenMCPs) => {
+    const body = {
+        MCPs: {
+            point0: {
+                ID: 0,
+                isAvailable: chosenMCPs.includes(0)
+            },
+            point1: {
+                ID: 1,
+                isAvailable: chosenMCPs.includes(1)
+            },
+            point2: {
+                ID: 2,
+                isAvailable: chosenMCPs.includes(2)
+            },
+            point3: {
+                ID: 3,
+                isAvailable: chosenMCPs.includes(3)
+            },
+            point4: {
+                ID: 4,
+                isAvailable: chosenMCPs.includes(4)
+            },
+            point5: {
+                ID: 5,
+                isAvailable: chosenMCPs.includes(5)
+            }
+        }
+    }
+    return axios.post('http://127.0.0.1:8080/api/optimizer/postRoute/', body)
+}
 
 const RouteCreateForm = ({
     onClose,
@@ -111,14 +128,18 @@ const RouteCreateForm = ({
     const handleSubmitPress = async () => {
         try {
             setLoading(true)
+            const { data: result } = await optimizeRoute(chosenMcps)
+            const orderedMcpIds = result.slice(1, -1)
+
             const { data } = await addRoute({
                 name: routeNameValue,
-                contains: chosenMcps
+                contains:orderedMcpIds 
             })
+            setChosenMcps(orderedMcpIds)
             routeDispatcher({type: 'add', data: {data}})
             setCreated(true)
 
-            const wayPoints = chosenMcps.map(cmId => {
+            const wayPoints = orderedMcpIds.map(cmId => {
                 const mcp = mcps.find(m => m.id===cmId)
                 return L.latLng(mcp.location.x, mcp.location.y)
             })   
@@ -163,15 +184,17 @@ const RouteCreateForm = ({
                     onChange={(e) => setRouteNameValue(e.target.value)}
                 />
                 <ul className="flex flex-col mt-4">
-                    {mcps.filter(m => chosenMcps.includes(m.id))
-                    .map(mcp => (
+                    {chosenMcps.map(mcpId => {
+                        const mcp = mcps.find(m => m.id === mcpId)
+                        return (
                         <ChosenMcpItem
                             key={mcp.id}
                             data={mcp}
                             onUnselect={handleUnSelectMcp}
                             created={created}
                         />
-                    ))}
+                        )
+                    })}
                 </ul>
             </div>
         </>
