@@ -8,8 +8,7 @@ import EmployeeSearchTab from "../../../../components/EmployeeSearchTab"
 import { useMapContext } from "../../context/MapContext"
 import { useEffect } from "react"
 import Marker from "../../mapAssets/Marker"
-import { DEFAULT_MAP_ZOOM } from "../.."
-import { DEPORT_LOCATION, TREATMENT_LOCATION } from "../../../../models/mcps"
+import { DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from "../.."
 import * as L from 'leaflet'
 import Circle from "../../mapAssets/Circle"
 
@@ -63,7 +62,7 @@ const MCPDetail = ({
             circleDispatcher({type: 'delete', data: {
                 id: circleId
             }})
-            setMapCenter([TREATMENT_LOCATION.x, TREATMENT_LOCATION.y])
+            setMapCenter(DEFAULT_MAP_CENTER)
             setMapZoom(DEFAULT_MAP_ZOOM)
         }
     }
@@ -107,7 +106,7 @@ const MCPDetail = ({
     }, [employeeDispatcher, McpDispatcher, id, MCP])
 
 
-    useEffect(handleShowMcpMap, [MCP, setMapCenter])
+    useEffect(handleShowMcpMap, [MCP, setMapCenter, circleDispatcher, markerDispatcher, setMapZoom])
 
     return (
         <>
