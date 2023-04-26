@@ -25,12 +25,14 @@ export default function Login() {
         try {
         await axios.get('https://api.chatengine.io/chats', { headers: authObject });
 
-        const sessionID = uuid();
-        if(sessionStorage.getItem(inputs.login_username))
-        {
-            console.log("session already assign for: ", inputs.login_username, sessionID )
-        }
-        else sessionStorage.setItem(inputs.login_username, sessionID);
+        // const sessionID = uuid();
+        // if(sessionStorage.getItem(inputs.login_username))
+        // {
+        //     console.log("session already assign for: ", inputs.login_username, sessionID )
+        // }
+        // else sessionStorage.setItem(inputs.login_username, sessionID);
+        localStorage.setItem('username', inputs.login_username);
+        localStorage.setItem('password', inputs.login_password);
 
         console.log('info: ', inputs.login_username,' ', inputs.login_password);
         navigate('/');
