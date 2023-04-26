@@ -1,5 +1,5 @@
-/* CHAT STYLES */
-  .ce-chat-list {
+/*  
+.ce-chat-list {
     background-color: rgb(240, 240, 240) !important;
   }
 
@@ -62,7 +62,7 @@
   }
 
   /* CUSTOM FEED */
-
+/*
   .chat-feed {
     height: 100%;
     width: 100%;
@@ -125,6 +125,7 @@
     border-radius: 6px;
     height: 30vw;
     /* width: 30vw; */
+    /*
     max-height: 200px;
     max-width: 200px;
     min-height: 100px;
@@ -198,6 +199,7 @@
   }
 
   /* FORM STYLES */
+  /*
   *,
   *::after,
   *::before {
@@ -281,3 +283,5 @@
     opacity: 1;
     right: 0;
   }
+
+  */

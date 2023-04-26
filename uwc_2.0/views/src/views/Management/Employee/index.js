@@ -7,14 +7,16 @@ import AssetSearch from "../components/AssetSearch";
 import AssetTable from "../components/AssetTable";
 import AssetDeleteModal from "../components/AssetDeleteModal";
 import EmployeeForm from "./components/EmployeeForm";
+import Schedule from "../../Schedule";
 
 const Employee = () => {
 
     const { employees } = useEmployeeContext()
     const [ showDeleteModal, setShowDeleteModal ] = useState({show: false, id: null})
     const [ showFormModal, setShowFormModal ] = useState({show: false, id: null})
-    const navigate = useNavigate();
+    const [ showScheduleModal, setShowScheduleModal ] = useState({show: false, id: null})
 
+    // const navigate = useNavigate();
 
     const handleAddEmployeePress = () => {
         setShowFormModal({show: true, id: null})
@@ -37,8 +39,12 @@ const Employee = () => {
     }, [setShowDeleteModal])
 
     const handleSchedulePress = useCallback((id) => {
-        navigate(`/schedule/${id}`);
+        setShowScheduleModal({show: true, id: id})
+        // navigate(`/schedule/${id}`);
     },[])
+    const handleCloseSchedule = useCallback(() => {
+        setShowScheduleModal({show: false, id: null})
+    })
 
     return (
         <>
@@ -87,6 +93,11 @@ const Employee = () => {
             <EmployeeForm
                 employeeId={showFormModal.id}
                 onClose={handleCloseEmployeeForm}
+            />}
+            {showScheduleModal.show &&
+            <Schedule
+                id={showScheduleModal.id}
+                onClose={handleCloseSchedule}
             />}
         </>
     );
