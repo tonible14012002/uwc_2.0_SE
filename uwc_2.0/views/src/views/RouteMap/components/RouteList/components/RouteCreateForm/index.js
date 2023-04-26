@@ -135,6 +135,7 @@ const RouteCreateForm = ({
                 name: routeNameValue,
                 contains:orderedMcpIds 
             })
+            
             setChosenMcps(orderedMcpIds)
             routeDispatcher({type: 'add', data: {data}})
             setCreated(true)
@@ -150,7 +151,23 @@ const RouteCreateForm = ({
             ]).addTo(map.target)
         }
         catch (e) {
+            const { data } = await addRoute({
+                name: routeNameValue,
+                contains: chosenMcps
+            })
             console.log(e)
+            routeDispatcher({type: 'add', data: {data}})
+            setCreated(true)
+
+            const wayPoints = chosenMcps.map(cmId => {
+                const mcp = mcps.find(m => m.id===cmId)
+                return L.latLng(mcp.location.x, mcp.location.y)
+            })   
+            routeControl.current.setWaypoints([
+                DEPOT_POINT,
+                ...wayPoints,
+                TREATMENT_POINT
+            ]).addTo(map.target)
         }
         setLoading(false)
     }
