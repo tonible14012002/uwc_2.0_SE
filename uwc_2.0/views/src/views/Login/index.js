@@ -1,8 +1,9 @@
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
 import {React, useState} from "react";
 import { useNavigate } from "react-router-dom";
-import './loginForm.css';
+import './styles/loginForm.css';
 import axios from 'axios';
+import { v4 as uuid } from 'uuid';
 //a
 export default function Login() {
     const navigate = useNavigate();
@@ -16,6 +17,7 @@ export default function Login() {
     }
 
     const handleSubmit = async(event) => {
+
         event.preventDefault();
 
         const authObject = { 'Project-ID': projectID, 'User-Name': inputs.login_username, 'User-Secret': inputs.login_password };
@@ -23,8 +25,13 @@ export default function Login() {
         try {
         await axios.get('https://api.chatengine.io/chats', { headers: authObject });
 
-        localStorage.setItem('username', inputs.login_username);
-        localStorage.setItem('password', inputs.login_password);
+        const sessionID = uuid();
+        if(sessionStorage.getItem(inputs.login_username))
+        {
+            console.log("session already assign for: ", inputs.login_username, sessionID )
+        }
+        else sessionStorage.setItem(inputs.login_username, sessionID);
+
         console.log('info: ', inputs.login_username,' ', inputs.login_password);
         navigate('/');
         setError('');
@@ -34,70 +41,63 @@ export default function Login() {
     }
 
     return (
-        <Container fluid className="bg-login">
-            <Row className="vh-100 d-flex justify-content-center align-items-center">
-                <Col md={8} lg={4} xs={12}>
-                    <Card className="shadow rounded-card" style={{ backgroundColor: "rgb(236,242,246)"}}>
-                        <Card.Body className="mx-3">
-                            <div className="mb-3 mt-md-4">
-                                <h2 className="fw-bold mb-5 text-uppercase text-center">Log in</h2>
-                                <div className="mb-3 mt-5">
-                                    <Form onSubmit={handleSubmit}>
-                                        <Form.Group className="mb-3" controlId="UserID">
-                                            <Form.Control
-                                                name="login_username"
-                                                className="form-login"
-                                                type="text"
-                                                placeholder="User Name / User Identification"
-                                                value={inputs.login_username || ""}
-                                                onChange={handleChange}
-                                            />
-                                        </Form.Group>
-
-                                        <Form.Group
-                                            className="mb-4"
-                                            controlId="Password"
-                                        >
-                                            <Form.Control
-                                                className="form-login"
-                                                type="password"
-                                                placeholder="Password"
-                                                name="login_password"
-                                                value={inputs.login_password || ""}
-                                                onChange={handleChange}
-                                                />
-                                        </Form.Group>
-                                        <Form.Group
-                                            className="mb-3"
-                                            controlId="formBasicCheckbox"
-                                        >
-                                        <p className="text-danger fs-6 fst-italic">{error}</p>
-                                        <p className="small">
-                                            <a className="text-primary d-flex flex-row" href="#!">
-                                                Forgot password?
-                                            </a>
-                                        </p>
-                                        </Form.Group>
-                                        <div className="d-grid mb-5">
-                                            <Button className="form-login" variant="primary" type="submit">
-                                                Login
-                                            </Button>
-                                        </div>
-                                    </Form>
-                                    <div className="mt-3 mb-5">
-                                        <p className="mb-0  text-center">
-                                            Don't have an account?{" "}
-                                            <a href="{''}" className="text-primary fw-bold">
-                                                Sign Up
-                                            </a>
-                                        </p>
-                                    </div>
+        <section className="bg-gray-50 dark:bg-gray-900 place-items-center bg-login" style={{height: '100vh'}}>
+        <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+            <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700"   style={{width: '550px', marginTop: '140px'}}>
+                <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+                    <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white" style={{textAlign:'center'}}>
+                        Sign In
+                    </h1>
+                    <form className="space-y-4 md:space-y-6" action="#" onSubmit={handleSubmit}>
+                        <div>
+                            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your Username</label>
+                            <input
+                                type="text"
+                                name="login_username"
+                                id="userName"
+                                onChange={(e) => {handleChange(e)}}
+                                value = {inputs.login_username || ""}
+                                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="User Name / User Identification" required=""/>
+                        </div>
+                        <div>
+                            <label
+                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                            <input
+                                type="password"
+                                name="login_password"
+                                id="password"
+                                placeholder="••••••••"
+                                onChange={(e) => {handleChange(e)}}
+                                value = {inputs.login_password || ""}
+                                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required=""/>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-start">
+                                <div className="flex items-center h-5">
+                                    <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" required=""/>
+                                </div>
+                                <div className="ml-3 text-sm">
+                                    <label className="text-gray-500 dark:text-gray-300">Remember me</label>
                                 </div>
                             </div>
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
-        </Container>
+                            <a href="#" className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a>
+                        </div>
+                        <button
+                            type="submit"
+                            className="w-full text-dark bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                            onSubmit={handleSubmit}
+                        >
+
+                            Sign in
+                        </button>
+                        <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+                            Don’t have an account yet? <a href="#" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+        </section>
     );
 }

@@ -20,14 +20,8 @@ export const OptimizerController = {
         const Parent = []
         const Data = [];
         let idx = 0;
-        let start = 'point0';
-        let flag = false;
         for (let point in MCPs) {
         {
-            if (flag === false && MCPs[point].isAvailable === true) {
-                start = point;
-                flag = true;
-            }
             PointsInfo.push({ point: MCPs[point], minDist: inf, index: idx++, namePoint: point })
         }
         }
@@ -85,3 +79,42 @@ const distance = ({latitude: lat1, longitude: lon1}, {latitude: lat2, longitude:
 const toRadians = (degrees) => {
     return degrees * (Math.PI / 180);
 }
+
+/*
+{
+    "MCPs":{
+        "point0": {
+            "longitude": 10.762357,
+            "latitude": 106.662085,
+            "isAvailable": true
+        },
+        "point1": {
+            "longitude": 10.768384,
+            "latitude": 106.658254,
+            "isAvailable": true
+        },
+        "point2": {
+            "longitude": 10.769650,
+            "latitude": 106.670166,
+            "isAvailable": true
+        },
+        "point3": {
+            "longitude": 10.775690,
+            "latitude": 106.667341,
+            "isAvailable": true
+        },
+        "point4": {
+            "longitude": 10.762120,
+            "latitude": 106.668560,
+            "isAvailable": true
+        },
+        "point5": {
+            "longitude": 10.757372,
+            "latitude": 106.663417,
+            "isAvailable": true
+        }
+    },
+    "start": 2,
+    "end": 5
+}
+*/
