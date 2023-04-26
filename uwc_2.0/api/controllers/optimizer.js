@@ -15,7 +15,26 @@ export const OptimizerController = {
         ]
 
         const PointsInfo = []
-        const MCPs = req.body.MCPs;
+        const MCPs = {
+            "point0": {
+                "ID": 0
+            },
+            "point1": {
+                "ID": 1
+            },
+            "point2": {
+                "ID": 2
+            },
+            "point3": {
+                "ID": 3
+            },
+            "point4": {
+                "ID": 4
+            },
+            "point5": {
+                "ID": 5
+            }
+        };
 
         const Parent = []
         const Data = [];
