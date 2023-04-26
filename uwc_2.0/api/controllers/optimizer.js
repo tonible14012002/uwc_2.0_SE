@@ -4,7 +4,7 @@ import { MinPriorityQueue } from '@datastructures-js/priority-queue';
 export const OptimizerController = {
     Optimizer: (req, res) => {
         const inf = 10000;
-
+        const rootDis = [[2500,1200,1500,2100,2100,3200],[2100,2900,3600,2500,1400,3700]]
         const distance = [
             [0, 950, 1200, 1600, 1700, 2400],
             [950, 0, 600, 850, 1300, 2200],
@@ -15,67 +15,112 @@ export const OptimizerController = {
         ]
 
         const PointsInfo = []
-        const MCPs = {
-            "point0": {
-                "ID": 0
-            },
-            "point1": {
-                "ID": 1
-            },
-            "point2": {
-                "ID": 2
-            },
-            "point3": {
-                "ID": 3
-            },
-            "point4": {
-                "ID": 4
-            },
-            "point5": {
-                "ID": 5
-            }
-        };
+        const MCPs = req.body.MCPs;
 
         const Parent = []
         const Data = [];
+        var start = 0;
+        var data = '';
         let idx = 0;
         for (let point in MCPs) {
         {
-            PointsInfo.push({ point: MCPs[point], minDist: inf, index: idx++, namePoint: point })
+            let location = point
+            let num = parseInt(location.slice(5));
+            if(point.isAvailable === true)
+            {
+                start = num;
+            }
+            PointsInfo.push({ point: MCPs[point], minDist: inf, index: num, namePoint: point, mark: false, visit: 0 })
         }
         }
         const MCPsQueue = new MinPriorityQueue((point) => point.minDist);
+        const MCPsOrder = new MinPriorityQueue((point) => point.minDist);
 
-        const minPath = (start, end) => {
-            PointsInfo[start].adjIndex = 0;
+        const minSpanning = (start) => {
             PointsInfo[start].minDist = 0;
-            Parent[PointsInfo[start].index] = 0
-            MCPsQueue.enqueue(PointsInfo[start]);
+            // Parent[PointsInfo[start].index] = 0
+            MCPsOrder.enqueue(PointsInfo[start]);
 
-            while (!MCPsQueue.isEmpty()) {
-                const curPoint = MCPsQueue.pop();
-                if (curPoint.minDist > PointsInfo[curPoint.index].minDist) continue;
+            while(!MCPsOrder.isEmpty())
+            {
+                const curPoint = MCPsOrder.pop();
+                if (PointsInfo[curPoint.index].minDist < curPoint.minDist || curPoint.point.isAvailable === false) continue;
+
+                curPoint.mark = true;
+
                 PointsInfo.forEach((adjPoint) => {
                     const gap = distance[curPoint.index][adjPoint.index];
 
-                    if (gap === 0) return;
+                    if (gap === 0 || adjPoint.mark === true || adjPoint.point.isAvailable === false) return;
 
-                    if (adjPoint.minDist > curPoint.minDist + gap) {
-                        adjPoint.minDist = curPoint.minDist + gap;
-                        MCPsQueue.enqueue(adjPoint);
+                    if (adjPoint.minDist > gap) {
+                        adjPoint.minDist = gap;
+                        MCPsOrder.enqueue(adjPoint);
                         Parent[adjPoint.index] = curPoint.index;
                     }
                 })
             }
-            Data.push(PointsInfo[end].namePoint)
-            while (end != start) {
-                Data.push(PointsInfo[Parent[end]].namePoint);
-                end = Parent[end];
+            let begin = 0;
+            let finish = 0;
+            let count = new Array(Parent.length).fill(0);
+            Parent.forEach((value, index) => {
+                // Data.push([index, value])
+                count[value]++;
+                count[index]++;
+            })
+
+            count.forEach((node, index) => {
+                if(node === 1 && begin === 0) begin = index;
+                else if(node === 1) finish = index;
+                else if(node !== 1 && node > 0){
+                    Data.push(index);
+                }
+            })
+
+            if(rootDis[0][begin] > rootDis[0][finish])
+            {
+                let Tmp = begin;
+                begin = finish;
+                finish = Tmp;
             }
+            Data.unshift(begin);
+            Data.unshift('deport');
+            Data.push(finish);
+            Data.push('treatment')
         }
-        minPath(req.body.start, req.body.end);
+
+        minSpanning(start);
         return res.status(200).json(Data);
     }
+
+        // const minPath = (start, end) => {
+        //     PointsInfo[start].minDist = 0;
+        //     Parent[PointsInfo[start].index] = 0
+        //     MCPsQueue.enqueue(PointsInfo[start]);
+
+        //     while (!MCPsQueue.isEmpty()) {
+        //         const curPoint = MCPsQueue.pop();
+        //         if (curPoint.minDist > PointsInfo[curPoint.index].minDist) continue;
+        //         PointsInfo.forEach((adjPoint) => {
+        //             const gap = distance[curPoint.index][adjPoint.index];
+
+        //             if (gap === 0) return;
+
+        //             if (adjPoint.minDist > curPoint.minDist + gap) {
+        //                 adjPoint.minDist = curPoint.minDist + gap;
+        //                 MCPsQueue.enqueue(adjPoint);
+        //                 Parent[adjPoint.index] = curPoint.index;
+        //             }
+        //         })
+        //     }
+        //     Data.push(PointsInfo[end].namePoint)
+        //     while (end != start) {
+        //         Data.push(PointsInfo[Parent[end]].namePoint);
+        //         end = Parent[end];
+        //     }
+        // }
+
+
 }
 
 
