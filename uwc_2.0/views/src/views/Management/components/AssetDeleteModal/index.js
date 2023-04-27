@@ -55,11 +55,13 @@ const AssetDeleteModal = ({assetId, waitTime = 3, assetType, onClose, ...props})
             try {
                 setLoading(true)
                 await deleteMyVehicle(assetId)
-                const employeeId = vehicles.find(ve => ve.id === assetId).employee
+                const employee = vehicles.find(ve => ve.id === assetId)
                 vehicleDispatcher({type: 'delete', data: {id: assetId}})
-                employeeDispatcher({type: 'patch', data: {id: employeeId, data: {
-                    vehicle: null
-                }}})
+                if (employee.vehicle) {
+                    employeeDispatcher({type: 'patch', data: {id: employee.id, data: {
+                        vehicle: null
+                    }}})
+                }
             }
             catch (e) {
                 console.log(e)

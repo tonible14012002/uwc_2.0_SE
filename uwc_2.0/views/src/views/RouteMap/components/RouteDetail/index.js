@@ -30,12 +30,14 @@ const RouteDetail = ({
 
     const handleShowRoute = () => {
         const controlRef = routeControl.current
-        const wayPoints = routeMcps.map(mcp => L.latLng(mcp.location.x, mcp.location.y))
-        controlRef.setWaypoints([
-            DEPOT_POINT,
-            ...wayPoints,
-            TREATMENT_POINT
-        ])
+        setTimeout(() => {
+            const wayPoints = routeMcps.map(mcp => L.latLng(mcp.location.x, mcp.location.y))
+            controlRef.setWaypoints([
+                DEPOT_POINT,
+                ...wayPoints,
+                TREATMENT_POINT
+            ])
+        },0);
 
         return () => {
             controlRef.setWaypoints([])
