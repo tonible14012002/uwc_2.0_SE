@@ -34,7 +34,7 @@ export const OptimizerController = {
             PointsInfo.push({ point: MCPs[point], minDist: inf, index: num, namePoint: point})
         }
 
-            const minPath = (start, end) => {
+        const minPath = (start, end) => {
             PointsInfo[start].minDist = 0;
             Parent[PointsInfo[start].index] = 0
             MCPsQueue.enqueue(PointsInfo[start]);
@@ -59,6 +59,7 @@ export const OptimizerController = {
                 Data.push(PointsInfo[Parent[end]].namePoint);
                 end = Parent[end];
             }
+        }
 
                 //find bottle neck point => O(n^2)
         // >= 3 ==> seem as bottle neck
@@ -182,10 +183,6 @@ export const OptimizerController = {
 
 
     }
-    }
-
-
-
 }
 
 
