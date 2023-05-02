@@ -7,6 +7,7 @@ const getMyEmployee = () => {
         setTimeout(()=> {
             resolve({data: [
                 EmployeeModel.create({
+                    // id: 0
                     fullname: "Bui Ngoc Nam Anh", 
                     role: "Janitor", 
                     phone: "0796518081", 
@@ -15,6 +16,7 @@ const getMyEmployee = () => {
                     vehicle: null
                 }),
                 EmployeeModel.create({
+                    // id: 1
                     fullname: "Dai ngoc Quoc Trung", 
                     role: "Collector", 
                     phone: "0796518081", 

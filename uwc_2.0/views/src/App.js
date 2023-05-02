@@ -23,17 +23,11 @@ function App() {
               element={
                 <Layout>
                   <RouteProvider>
-                    <ContainProvider>
                       <McpProvider>
-                        <VehicleProvider>
-                          <EmployeeProvider>
-                            <ScrollToTop>
-                              <Page/>
-                            </ScrollToTop>
-                          </EmployeeProvider>
-                        </VehicleProvider>
+                          <ScrollToTop>
+                            <Page/>
+                          </ScrollToTop>
                       </McpProvider>
-                    </ContainProvider>
                   </RouteProvider>
                 </Layout>
               }

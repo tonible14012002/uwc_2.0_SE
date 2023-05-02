@@ -1,22 +1,37 @@
-import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useState, useReducer } from "react";
 import EButton from "../../../components/EButton";
-import { useEmployeeContext } from "../../../context/EmployeeContext";
 import AssetFilter from "../components/AssetFilter";
 import AssetSearch from "../components/AssetSearch";
 import AssetTable from "../components/AssetTable";
-import AssetDeleteModal from "../components/AssetDeleteModal";
+import { EmployeeDeleteModal } from "../components/AssetDeleteModal"
 import EmployeeForm from "./components/EmployeeForm";
 import Schedule from "../../Schedule";
+import { getMyEmployee } from "../../../services/emlpoyeServices";
+import employeeReducer from "../../../context/EmployeeContext/employeeReducer";
+import { EmployeeContext } from "../../../context/EmployeeContext/employeeProvider";
 
 const Employee = () => {
 
-    const { employees } = useEmployeeContext()
     const [ showDeleteModal, setShowDeleteModal ] = useState({show: false, id: null})
     const [ showFormModal, setShowFormModal ] = useState({show: false, id: null})
     const [ showScheduleModal, setShowScheduleModal ] = useState({show: false, id: null})
 
-    // const navigate = useNavigate();
+    const [employees, dispatcher] = useReducer(employeeReducer, undefined)
+
+    const handleFetchEmployee = () => {
+        const fetchEmployee = async () => {
+            try {
+                const result = await getMyEmployee()
+                dispatcher({type: 'get', data: result.data})
+            }
+            catch (e) {
+                console.log(e)
+            }
+        }
+        fetchEmployee()
+    }
+
+    useEffect(handleFetchEmployee, [])
 
     const handleAddEmployeePress = () => {
         setShowFormModal({show: true, id: null})
@@ -44,10 +59,10 @@ const Employee = () => {
     },[])
     const handleCloseSchedule = useCallback(() => {
         setShowScheduleModal({show: false, id: null})
-    })
+    }, [])
 
     return (
-        <>
+        <EmployeeContext.Provider value={{employees, dispatcher}}>
             <div>
                 <header className="mt-16 mb-8">
                     <span className="block w-fit text-4xl font-semibold ">
@@ -84,8 +99,7 @@ const Employee = () => {
                 />
             </div>
             {showDeleteModal.show &&
-            <AssetDeleteModal
-                assetType="employee"
+            <EmployeeDeleteModal
                 assetId={showDeleteModal.id}
                 onClose={handleCloseDeleteModal}
             />}
@@ -99,7 +113,7 @@ const Employee = () => {
                 id={showScheduleModal.id}
                 onClose={handleCloseSchedule}
             />}
-        </>
+        </EmployeeContext.Provider>
     );
 }
 

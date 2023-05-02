@@ -1,19 +1,39 @@
-import { useState, useCallback, useEffect } from "react";
+import { useReducer, useState, useCallback, useEffect } from "react";
 import AssetTable from "../components/AssetTable";
 import AssetSearch from "../components/AssetSearch";
 import AssetFilter from "../components/AssetFilter";
-import AssetDeleteModal from "../components/AssetDeleteModal";
 import EButton from "../../../components/EButton";
-import { useVehicleContext } from "../../../context/VehicleContext";
 import VehicleForm from "./components/VehicleForm";
 import VehicleLoad from "./components/VehicleLoad";
 import VehicleDriver from "./components/VehicleDriver";
+import { VehicleDeleteModal } from "../components/AssetDeleteModal";
+import vehicleReducer from "../../../context/VehicleContext/vehicleReducer";
+import { getMyVehicle } from "../../../services/vehicleServices";
+import { VehicleContext } from "../../../context/VehicleContext/vehicleProvider";
 
 const Vehicle = () => {
 
-    const { vehicles } = useVehicleContext()
     const [ showDeleteModal, setShowDeleteModal ] = useState({show: false, id: null})
     const [ showFormModal, setShowFormModal ] = useState({show: false, id: null})
+    const [ vehicles, dispatcher ] = useReducer(vehicleReducer, undefined)
+
+    const handleFetchVehicles = () => {
+        if (vehicles) return 
+
+        const fetchEmployee = async () => {
+            try {
+                const result = await getMyVehicle()
+                console.log(result)
+                dispatcher({type: 'get', data: result.data})
+            }
+            catch (e) {
+                console.log(e)
+            }
+        }
+        fetchEmployee()
+    }
+
+    useEffect(handleFetchVehicles, [vehicles])
 
     const handleAddVechiclePress = () => {
         setShowFormModal({show: true, id: null})
@@ -36,7 +56,7 @@ const Vehicle = () => {
     }, [setShowDeleteModal])
 
     return (
-        <>
+        <VehicleContext.Provider value={{vehicles, dispatcher}}>
             <div>
                 <header className="mt-16 mb-8">
                         <span className="block w-fit text-4xl font-semibold ">
@@ -75,8 +95,7 @@ const Vehicle = () => {
                 />
             </div>
             {showDeleteModal.show &&
-            <AssetDeleteModal
-                assetType="vehicle"
+            <VehicleDeleteModal
                 assetId={showDeleteModal.id}
                 onClose={handleCloseDeleteModal}
             />}
@@ -85,7 +104,7 @@ const Vehicle = () => {
                 vehicleId={showFormModal.id}
                 onClose={handleCloseVehicleForm}
             />}
-        </>
+        </VehicleContext.Provider>
     );
 }
 

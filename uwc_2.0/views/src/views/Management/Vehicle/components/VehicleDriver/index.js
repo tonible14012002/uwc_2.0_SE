@@ -5,12 +5,11 @@ import { useVehicleContext } from "../../../../../context/VehicleContext"
 import { useCallback, useState, useMemo } from "react"
 import { useEmployeeContext } from "../../../../../context/EmployeeContext"
 import EmployeeSearchTab from "../../../../../components/EmployeeSearchTab"
-
+import { VehicleContext } from "../../../../../context/VehicleContext/vehicleProvider"
 
 const VehicleDriver = ({ value, data}) => {
     const { id } = data
-    const { vehicles, dispatcher: vehicleDispatcher } = useVehicleContext()
-    const { dispatcher: employeeDispatcher } = useEmployeeContext()
+    const { vehicles, dispatcher } = useVehicleContext()
     const [ showEmployeeSelector, setShowEmployeeSelector ] = useState()
     const [ clickedPosition, setClickedPosition ] = useState({x: 0, y:0})
 
@@ -18,20 +17,16 @@ const VehicleDriver = ({ value, data}) => {
 
     const handleUnAssignDriver = () => {
         try {
-            const employeeId = vehicles.find(item => item.id === id).driver
-            vehicleDispatcher({type: 'patch', data: {id, data: {
-                driver: null, 
-                driver_name: null
-            }}})
-
-            employeeDispatcher({type: 'patch', data: {id: employeeId, data: {
-                vehicle: null
-            }}})
+            // call un assign services....
+            //
+            dispatcher({type: 'patch', data: {id, data: {
+                driver: null,
+                driver_name: ""
+            }}}) 
         }
         catch (e) {
             
         }
-        // Unassign driver
     }
 
 
@@ -50,12 +45,10 @@ const VehicleDriver = ({ value, data}) => {
     }
 
     const handleAssignEmployee = (employeeId, employeeName) => {
-        vehicleDispatcher({type: 'patch', data: {id, data: {
+        // call assign employee service
+        dispatcher({type: 'patch', data: {id, data: {
             driver: employeeId,
             driver_name: employeeName
-        }}})
-        employeeDispatcher({type: 'patch', data: {id: employeeId, data: {
-            vehicle: id
         }}})
     }
 
@@ -64,7 +57,7 @@ const VehicleDriver = ({ value, data}) => {
     }, [])
 
     return (
-        <>
+        <VehicleContext.Provider value={{vehicles, dispatcher}}>
             {showEmployeeSelector && 
             <EmployeeSearchTab
                 onClose={handleCloseEmployeeSelector}
@@ -96,7 +89,7 @@ const VehicleDriver = ({ value, data}) => {
                     </EButton>
                 </div>}
             </div>
-        </>
+        </VehicleContext.Provider>
     )
 }
 

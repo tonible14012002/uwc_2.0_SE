@@ -1,8 +1,9 @@
 import ReactDOM from "react-dom"
-import { useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import EButton from "../EButton"
 import useOnClickedOutSide from "../../hooks/useOnClickOutside"
 import { useEmployeeContext } from "../../context/EmployeeContext"
+import { getMyEmployee } from "../../services/emlpoyeServices"
 
 const EmployeeSearchTab = ({
     clickPosition,
@@ -11,10 +12,23 @@ const EmployeeSearchTab = ({
     onSelect = () => {}
 }) => {
 
-    const { employees } = useEmployeeContext()
-    const isEnoughBottomSpace = clickPosition.y < (window.innerHeight - 400)
-    console.log('enough ? __-',isEnoughBottomSpace)
+    const [ employees, setEmployees ] = useState([])
     const wrapperRef = useRef()
+
+    useEffect(() => {
+        const getEmployees = async () => {
+            try {
+                const result = await getMyEmployee()
+                setEmployees(result.data)
+            }
+            catch (e) {
+                console.log(e)
+            }
+        }
+        getEmployees()
+    }, [])
+
+    const isEnoughBottomSpace = clickPosition.y < (window.innerHeight - 400)
 
     const handleEmployeeSelect = (id, fullname) => {
         onSelect(id, fullname)
